@@ -40,25 +40,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = __importDefault(require("mongoose"));
-var clients;
-var ClientsDAO = /** @class */ (function () {
-    function ClientsDAO() {
+var orders;
+var OrdersDAO = /** @class */ (function () {
+    function OrdersDAO() {
     }
-    ClientsDAO.injectDB = function (conn) {
+    OrdersDAO.injectDB = function (conn) {
         return __awaiter(this, void 0, void 0, function () {
             var e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (clients)
+                        if (orders)
                             return [2 /*return*/];
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, conn.db("Main").collection("Clienti")];
+                        return [4 /*yield*/, conn.db("Main").collection("Ordini")];
                     case 2:
-                        clients = _a.sent();
-                        console.log("Clients collection initialized");
+                        orders = _a.sent();
+                        console.log("Ordini collection initialized");
                         return [3 /*break*/, 4];
                     case 3:
                         e_1 = _a.sent();
@@ -69,54 +69,57 @@ var ClientsDAO = /** @class */ (function () {
             });
         });
     };
-    ClientsDAO.getClients = function (_a) {
-        var _b = _a === void 0 ? {} : _a, _c = _b.filters, filters = _c === void 0 ? {} : _c, _d = _b.page, page = _d === void 0 ? 0 : _d, _e = _b.clientsPerPage, clientsPerPage = _e === void 0 ? 10 : _e;
+    OrdersDAO.getOrders = function (_a) {
+        var _b = _a === void 0 ? {} : _a, _c = _b.filters, filters = _c === void 0 ? {} : _c, _d = _b.page, page = _d === void 0 ? 0 : _d, _e = _b.ordersPerPage, ordersPerPage = _e === void 0 ? 10 : _e;
         return __awaiter(this, void 0, void 0, function () {
-            var query, cursor, e_2, displayCursor, clientsList, totalClientsList, e_3, e_4;
+            var query, cursor, e_2, displayCursor, ordersList, totalOrderList, e_3, e_4;
             return __generator(this, function (_f) {
                 switch (_f.label) {
                     case 0:
                         _f.trys.push([0, 10, , 11]);
                         query = {};
-                        if ("name" in filters) {
-                            query = { name: { $eq: filters["name"] } };
+                        if ("date" in filters) {
+                            query = { date: { $eq: filters["date"] } };
                         }
-                        else if ("adress" in filters) {
-                            query = { adress: { $eq: filters["adress"] } };
+                        else if ("cost" in filters) {
+                            query = { adress: { $eq: filters["cost"] } };
                         }
-                        else if ("cellphone" in filters) {
-                            query = { cellphone: { $eq: filters["cellphone"] } };
+                        else if ("JustEat" in filters) {
+                            query = { JustEat: { $eq: filters["JustEat"] } };
+                        }
+                        else if ("Deliveroo" in filters) {
+                            query = { Deliveroo: { $eq: filters["Deliveroo"] } };
                         }
                         cursor = void 0;
                         _f.label = 1;
                     case 1:
                         _f.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, clients.find(query)];
+                        return [4 /*yield*/, orders.find(query)];
                     case 2:
                         cursor = _f.sent();
                         return [3 /*break*/, 4];
                     case 3:
                         e_2 = _f.sent();
                         console.error("Unable to issue find command, ".concat(e_2));
-                        return [2 /*return*/, { clientsList: 0, totalClientsList: 0 }];
+                        return [2 /*return*/, { ordersList: 0, totalOrderList: 0 }];
                     case 4:
                         displayCursor = cursor
-                            .limit(clientsPerPage)
-                            .skip(clientsPerPage * page);
+                            .limit(ordersPerPage)
+                            .skip(ordersPerPage * page);
                         _f.label = 5;
                     case 5:
                         _f.trys.push([5, 8, , 9]);
                         return [4 /*yield*/, displayCursor.toArray()];
                     case 6:
-                        clientsList = _f.sent();
-                        return [4 /*yield*/, clients.countDocuments(query)];
+                        ordersList = _f.sent();
+                        return [4 /*yield*/, orders.countDocuments(query)];
                     case 7:
-                        totalClientsList = _f.sent();
-                        return [2 /*return*/, { clientsList: clientsList, totalClientsList: totalClientsList }];
+                        totalOrderList = _f.sent();
+                        return [2 /*return*/, { ordersList: ordersList, totalOrderList: totalOrderList }];
                     case 8:
                         e_3 = _f.sent();
                         console.log("Unable to convert cursor to array or problem counting documents, ".concat(e_3));
-                        return [2 /*return*/, { clientsList: [], totalClientsList: 0 }];
+                        return [2 /*return*/, { ordersList: [], totalOrderList: 0 }];
                     case 9: return [3 /*break*/, 11];
                     case 10:
                         e_4 = _f.sent();
@@ -127,48 +130,38 @@ var ClientsDAO = /** @class */ (function () {
             });
         });
     };
-    ClientsDAO.getClientByid = function (id) {
+    OrdersDAO.insertOrder = function (_a) {
+        var _b = _a === void 0 ? {} : _a, _c = _b.clientId, clientId = _c === void 0 ? new mongoose_1.default.Types.ObjectId() : _c, _d = _b.date, date = _d === void 0 ? new Date() : _d, _e = _b.cost, cost = _e === void 0 ? 0 : _e, _f = _b.JustEat, JustEat = _f === void 0 ? false : _f, _g = _b.JustEat_order, JustEat_order = _g === void 0 ? "" : _g, _h = _b.Deliveroo, Deliveroo = _h === void 0 ? false : _h, _j = _b.Deliveroo_order, Deliveroo_order = _j === void 0 ? "" : _j, _k = _b.pizze_ordinate, pizze_ordinate = _k === void 0 ? [] : _k;
         return __awaiter(this, void 0, void 0, function () {
-            var pipeline, e_5;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        console.log("getting client with id ".concat(id));
-                        pipeline = [
-                            {
-                                $match: {
-                                    _id: new mongoose_1.default.Types.ObjectId(id),
-                                },
-                            },
-                            {
-                                $lookup: {
-                                    from: "Ordini",
-                                    localField: "string",
-                                    foreignField: "string",
-                                    as: "ordini_effettuati",
-                                },
-                            },
-                            {
-                                $lookup: {
-                                    from: "Pizze",
-                                    localField: "string",
-                                    foreignField: "string",
-                                    as: "pizze_ordinate",
-                                },
-                            },
-                        ];
-                        return [4 /*yield*/, clients.aggregate(pipeline).next()];
-                    case 1: return [2 /*return*/, _a.sent()];
-                    case 2:
-                        e_5 = _a.sent();
-                        console.error("Something went wrong in getClientById: ".concat(e_5));
-                        throw e_5;
-                    case 3: return [2 /*return*/];
+            var order, cursor, pizzeArray, pizze;
+            return __generator(this, function (_l) {
+                pizzeArray = [];
+                for (pizze in pizze_ordinate) {
+                    pizzeArray.push(new mongoose_1.default.Types.ObjectId(pizze_ordinate[pizze]));
                 }
+                order = {
+                    clientId: clientId,
+                    date: date,
+                    cost: cost,
+                    JustEat: JustEat,
+                    JustEat_order: JustEat_order,
+                    Deliveroo: Deliveroo,
+                    Deliveroo_order: Deliveroo_order,
+                    pizzeArray: pizzeArray,
+                };
+                try {
+                    console.log(order);
+                    cursor = orders.insertOne(order);
+                    return [2 /*return*/, cursor];
+                }
+                catch (e) {
+                    console.log("Unable to insert order, ".concat(e));
+                    return [2 /*return*/, (order = {})];
+                }
+                return [2 /*return*/];
             });
         });
     };
-    return ClientsDAO;
+    return OrdersDAO;
 }());
-exports.default = ClientsDAO;
+exports.default = OrdersDAO;

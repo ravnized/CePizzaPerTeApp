@@ -23,7 +23,7 @@ export default class ClientsController {
 		});
 
 		let response = {
-			restaurants: clientsList,
+			clienti: clientsList,
 			page: page,
 			filters: filters,
 			entries_per_page: clientsPerPage,
@@ -36,6 +36,7 @@ export default class ClientsController {
 			let id = req.params.id || {};
 			let clients = await ClientsDAO.getClientByid(id);
 			if (!clients) {
+				console.log(`oops, no client with id ${id}`);
 				res.status(404).json({ error: "Not found" });
 				return;
 			}

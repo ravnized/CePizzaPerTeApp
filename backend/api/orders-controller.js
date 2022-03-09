@@ -39,43 +39,47 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var clientsDAO_1 = __importDefault(require("../dao/clientsDAO"));
-var ClientsController = /** @class */ (function () {
-    function ClientsController() {
+var mongoose_1 = __importDefault(require("mongoose"));
+var ordersDAO_1 = __importDefault(require("../dao/ordersDAO"));
+var OrdersController = /** @class */ (function () {
+    function OrdersController() {
     }
-    ClientsController.apiGetClient = function (req, res, next) {
+    OrdersController.apiGetOrder = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var clientsPerPage, page, filters, _a, clientsList, totalClients, response;
+            var ordersPerPage, page, filters, _a, ordersList, totalOrderList, response;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        clientsPerPage = req.query.clientsPerPage
-                            ? parseInt(req.query.clientsPerPage, 10)
+                        ordersPerPage = req.query.ordersPerPage
+                            ? parseInt(req.query.ordersPerPage, 10)
                             : 20;
                         page = req.query.page ? parseInt(req.query.page, 10) : 0;
                         filters = {};
-                        if (req.query.name) {
-                            filters.name = req.query.name;
+                        if (req.query.date) {
+                            filters.date = req.query.date;
                         }
-                        else if (req.query.adress) {
-                            filters.adress = req.query.adress;
+                        else if (req.query.cost) {
+                            filters.cost = req.query.cost;
                         }
-                        else if (req.query.cellphone) {
-                            filters.cellphone = req.query.cellphone;
+                        else if (req.query.JustEat) {
+                            filters.JustEat = req.query.JustEat;
                         }
-                        return [4 /*yield*/, clientsDAO_1.default.getClients({
+                        else if (req.query.Deliveroo) {
+                            filters.Deliveroo = req.query.Deliveroo;
+                        }
+                        return [4 /*yield*/, ordersDAO_1.default.getOrders({
                                 filters: filters,
                                 page: page,
-                                clientsPerPage: clientsPerPage,
+                                ordersPerPage: ordersPerPage,
                             })];
                     case 1:
-                        _a = _b.sent(), clientsList = _a.clientsList, totalClients = _a.totalClients;
+                        _a = _b.sent(), ordersList = _a.ordersList, totalOrderList = _a.totalOrderList;
                         response = {
-                            clienti: clientsList,
+                            orders: ordersList,
                             page: page,
                             filters: filters,
-                            entries_per_page: clientsPerPage,
-                            total_results: totalClients,
+                            entries_per_page: ordersPerPage,
+                            total_results: totalOrderList,
                         };
                         res.json(response);
                         return [2 /*return*/];
@@ -83,34 +87,55 @@ var ClientsController = /** @class */ (function () {
             });
         });
     };
-    ClientsController.apiGetClientById = function (req, res, next) {
+    OrdersController.apiInsertOrder = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, clients, e_1;
+            var clientId, date, cost, JustEat, JustEat_order, Deliveroo, Deliveroo_order, pizze_ordinate, insertOrderResponse, query, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        id = req.params.id || {};
-                        return [4 /*yield*/, clientsDAO_1.default.getClientByid(id)];
-                    case 1:
-                        clients = _a.sent();
-                        if (!clients) {
-                            console.log("oops, no client with id ".concat(id));
-                            res.status(404).json({ error: "Not found" });
-                            return [2 /*return*/];
+                        date = new Date(), cost = 0, JustEat = false, JustEat_order = "", Deliveroo = false, Deliveroo_order = "";
+                        query = null;
+                        try {
+                            query = req.body;
                         }
-                        res.json(clients);
-                        return [3 /*break*/, 3];
+                        catch (e) {
+                            console.error("Can't retrive request.body ".concat(e));
+                        }
+                        clientId = new mongoose_1.default.Types.ObjectId(query.clientId);
+                        date = query.date;
+                        cost = query.cost;
+                        JustEat = query.JustEat;
+                        JustEat_order = query.JustEat_order;
+                        Deliveroo = query.Deliveroo;
+                        Deliveroo_order = query.Deliveroo_order;
+                        pizze_ordinate = new mongoose_1.default.Types.Array(query.pizze_ordinate);
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, ordersDAO_1.default.insertOrder({
+                                clientId: clientId,
+                                date: date,
+                                cost: cost,
+                                JustEat: JustEat,
+                                JustEat_order: JustEat_order,
+                                Deliveroo: Deliveroo,
+                                Deliveroo_order: Deliveroo_order,
+                                pizze_ordinate: pizze_ordinate,
+                            })];
                     case 2:
+                        insertOrderResponse = _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
                         e_1 = _a.sent();
-                        console.log("api, ".concat(e_1));
-                        res.status(500).json({ error: e_1 });
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
+                        console.error("Problem in inserting order ".concat(e_1));
+                        return [3 /*break*/, 4];
+                    case 4:
+                        res.json(insertOrderResponse);
+                        return [2 /*return*/];
                 }
             });
         });
     };
-    return ClientsController;
+    return OrdersController;
 }());
-exports.default = ClientsController;
+exports.default = OrdersController;

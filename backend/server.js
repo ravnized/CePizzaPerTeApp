@@ -60,24 +60,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var dotenv = __importStar(require("dotenv"));
 var express_1 = __importDefault(require("express"));
-var mongodb_1 = __importDefault(require("mongodb"));
+var mongodb_1 = require("mongodb");
 var clients_routes_1 = __importDefault(require("./api/clients-routes"));
+var orders_routes_1 = __importDefault(require("./api/orders-routes"));
 var cors_1 = __importDefault(require("cors"));
 var clientsDAO_1 = __importDefault(require("./dao/clientsDAO"));
+var ordersDAO_1 = __importDefault(require("./dao/ordersDAO"));
 dotenv.config({ path: __dirname + "/../.env" });
-var mongoClient = mongodb_1.default.MongoClient;
+var mongoClient = mongodb_1.MongoClient;
 var app = (0, express_1.default)();
-console.log(process.env.MONGODB_URI);
 mongoClient
     .connect(process.env.MONGODB_URI)
     .catch(function (err) {
     console.error(err.stack);
 })
-    .then(function (client) { return __awaiter(void 0, void 0, void 0, function () {
+    .then(function (connection) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, clientsDAO_1.default.injectDB(client)];
+            case 0: return [4 /*yield*/, clientsDAO_1.default.injectDB(connection)];
             case 1:
+                _a.sent();
+                return [4 /*yield*/, ordersDAO_1.default.injectDB(connection)];
+            case 2:
                 _a.sent();
                 app.listen(3000, function () { return console.log("Server started on port 3000"); });
                 return [2 /*return*/];
@@ -87,6 +91,7 @@ mongoClient
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use("/api/v1/clients", clients_routes_1.default);
+app.use("/api/v1/orders", orders_routes_1.default);
 app.use("*", function (req, res) {
     res.status(404).json({ error: "not found" });
 });
