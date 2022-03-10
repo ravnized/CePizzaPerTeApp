@@ -3,6 +3,14 @@ let orders: any;
 interface filtersArray {
 	[key: string]: string | number;
 }
+interface orderObject {
+	id: mongoose.Types.ObjectId;
+	aggiunte: [mongoose.Types.ObjectId];
+	note: string;
+}
+
+interface orderInterface extends Array<orderObject> {}
+
 export default class OrdersDAO {
 	static async injectDB(conn: any) {
 		if (orders) return;
@@ -68,12 +76,7 @@ export default class OrdersDAO {
 	} = {}): Promise<any> {
 		let order: any;
 		let cursor: any;
-		let pizzeArray = [];
-		for (let pizze in pizze_ordinate) {
-			
-			pizzeArray.push(new mongoose.Types.ObjectId(pizze_ordinate[pizze]));
-		}
-	
+
 		order = {
 			clientId,
 			date,
@@ -82,7 +85,7 @@ export default class OrdersDAO {
 			JustEat_order,
 			Deliveroo,
 			Deliveroo_order,
-			pizzeArray,
+			pizze_ordinate,
 		};
 
 		try {

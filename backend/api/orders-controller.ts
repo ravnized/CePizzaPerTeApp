@@ -1,5 +1,23 @@
 import mongoose from "mongoose";
 import OrdersDAO from "../dao/ordersDAO";
+
+var OrderSchema = new mongoose.Schema({
+	_id: mongoose.Schema.Types.ObjectId,
+	client_id: mongoose.Schema.Types.ObjectId,
+	date: mongoose.Schema.Types.Date,
+	cost: mongoose.Schema.Types.Number,
+	JustEat: mongoose.Schema.Types.Boolean,
+	JustEat_order: mongoose.Schema.Types.String,
+	Deliveroo: mongoose.Schema.Types.Boolean,
+	Deliveroo_order: mongoose.Schema.Types.String,
+	Pizze_Ordinate: [
+		{
+			id: mongoose.Schema.Types.ObjectId,
+			aggiunte: [mongoose.Schema.Types.ObjectId],
+			note: mongoose.Schema.Types.String,
+		},
+	],
+});
 export default class OrdersController {
 	static async apiGetOrder(req: any, res: any, next: any) {
 		const ordersPerPage = req.query.ordersPerPage
@@ -51,14 +69,14 @@ export default class OrdersController {
 			console.error(`Can't retrive request.body ${e}`);
 		}
 
-		clientId = new mongoose.Types.ObjectId(query.clientId);
+		clientId = query.clientId;
 		date = query.date;
 		cost = query.cost;
 		JustEat = query.JustEat;
 		JustEat_order = query.JustEat_order;
 		Deliveroo = query.Deliveroo;
 		Deliveroo_order = query.Deliveroo_order;
-		pizze_ordinate = new mongoose.Types.Array(query.pizze_ordinate);
+		pizze_ordinate = query.pizze_ordinate;
 		try {
 			insertOrderResponse = await OrdersDAO.insertOrder({
 				clientId: clientId,

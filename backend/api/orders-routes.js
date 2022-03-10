@@ -8,5 +8,5 @@ var orders_controller_1 = __importDefault(require("./orders-controller"));
 var router = express_1.default.Router();
 router.route("/").get(orders_controller_1.default.apiGetOrder);
 router.route("/").post(orders_controller_1.default.apiInsertOrder);
-router.route("/").update(orders_controller_1.default.apiInsertOrder);
+//router.route("/").delete(OrdersController.apiInsertOrder);
 exports.default = router;

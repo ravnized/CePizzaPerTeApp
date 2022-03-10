@@ -41,6 +41,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = __importDefault(require("mongoose"));
 var ordersDAO_1 = __importDefault(require("../dao/ordersDAO"));
+var OrderSchema = new mongoose_1.default.Schema({
+    _id: mongoose_1.default.Schema.Types.ObjectId,
+    client_id: mongoose_1.default.Schema.Types.ObjectId,
+    date: mongoose_1.default.Schema.Types.Date,
+    cost: mongoose_1.default.Schema.Types.Number,
+    JustEat: mongoose_1.default.Schema.Types.Boolean,
+    JustEat_order: mongoose_1.default.Schema.Types.String,
+    Deliveroo: mongoose_1.default.Schema.Types.Boolean,
+    Deliveroo_order: mongoose_1.default.Schema.Types.String,
+    Pizze_Ordinate: [
+        {
+            id: mongoose_1.default.Schema.Types.ObjectId,
+            aggiunte: [mongoose_1.default.Schema.Types.ObjectId],
+            note: mongoose_1.default.Schema.Types.String,
+        },
+    ],
+});
 var OrdersController = /** @class */ (function () {
     function OrdersController() {
     }
@@ -101,14 +118,14 @@ var OrdersController = /** @class */ (function () {
                         catch (e) {
                             console.error("Can't retrive request.body ".concat(e));
                         }
-                        clientId = new mongoose_1.default.Types.ObjectId(query.clientId);
+                        clientId = query.clientId;
                         date = query.date;
                         cost = query.cost;
                         JustEat = query.JustEat;
                         JustEat_order = query.JustEat_order;
                         Deliveroo = query.Deliveroo;
                         Deliveroo_order = query.Deliveroo_order;
-                        pizze_ordinate = new mongoose_1.default.Types.Array(query.pizze_ordinate);
+                        pizze_ordinate = query.pizze_ordinate;
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);

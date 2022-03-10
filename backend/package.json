@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "",
 	"scripts": {
-		"compile": "tsc && node ./backend/server.js",
+		"compile": "tsc -p ./tsconfig.json && node server.js",
 		"dev": "nodemon -e ts  --exec \"npm run compile\""
 	},
 	"repository": {
@@ -20,9 +20,12 @@
 	"homepage": "https://github.com/ravnized/CePizzaPerTeApp#readme",
 	"dependencies": {
 		"cors": "^2.8.5",
+		"create-react-app": "^5.0.0",
 		"express": "^4.17.1",
 		"mongodb": "^4.2.2",
-		"mongoose": "^6.2.4"
+		"mongoose": "^6.2.4",
+		"react-app": "^1.1.2",
+		"tar": "^6.1.11"
 	},
 	"devDependencies": {
 		"@types/cors": "^2.8.12",

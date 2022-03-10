@@ -133,12 +133,8 @@ var OrdersDAO = /** @class */ (function () {
     OrdersDAO.insertOrder = function (_a) {
         var _b = _a === void 0 ? {} : _a, _c = _b.clientId, clientId = _c === void 0 ? new mongoose_1.default.Types.ObjectId() : _c, _d = _b.date, date = _d === void 0 ? new Date() : _d, _e = _b.cost, cost = _e === void 0 ? 0 : _e, _f = _b.JustEat, JustEat = _f === void 0 ? false : _f, _g = _b.JustEat_order, JustEat_order = _g === void 0 ? "" : _g, _h = _b.Deliveroo, Deliveroo = _h === void 0 ? false : _h, _j = _b.Deliveroo_order, Deliveroo_order = _j === void 0 ? "" : _j, _k = _b.pizze_ordinate, pizze_ordinate = _k === void 0 ? [] : _k;
         return __awaiter(this, void 0, void 0, function () {
-            var order, cursor, pizzeArray, pizze;
+            var order, cursor;
             return __generator(this, function (_l) {
-                pizzeArray = [];
-                for (pizze in pizze_ordinate) {
-                    pizzeArray.push(new mongoose_1.default.Types.ObjectId(pizze_ordinate[pizze]));
-                }
                 order = {
                     clientId: clientId,
                     date: date,
@@ -147,7 +143,7 @@ var OrdersDAO = /** @class */ (function () {
                     JustEat_order: JustEat_order,
                     Deliveroo: Deliveroo,
                     Deliveroo_order: Deliveroo_order,
-                    pizzeArray: pizzeArray,
+                    pizze_ordinate: pizze_ordinate,
                 };
                 try {
                     console.log(order);
