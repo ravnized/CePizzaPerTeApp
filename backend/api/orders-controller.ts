@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 import OrdersDAO from "../dao/ordersDAO";
 
 var OrderSchema = new mongoose.Schema({
@@ -26,15 +26,37 @@ export default class OrdersController {
 		const page = req.query.page ? parseInt(req.query.page, 10) : 0;
 
 		let filters: any = {};
-		if (req.query.date) {
-			filters.date = req.query.date;
-		} else if (req.query.cost) {
-			filters.cost = req.query.cost;
-		} else if (req.query.JustEat) {
-			filters.JustEat = req.query.JustEat;
-		} else if (req.query.Deliveroo) {
-			filters.Deliveroo = req.query.Deliveroo;
+		if (req.query.id) {
+			filters._id = new mongoose.Types.ObjectId(req.query.id);
 		}
+		if (req.query.client_id) {
+			filters.client_id = new mongoose.Types.ObjectId(req.query.client_id);
+		}
+		if (req.query.date) {
+			filters.date = new Date(req.query.date);
+		}
+		if (req.query.cost) {
+			filters.cost = parseFloat(req.query.cost);
+		}
+		if (req.query.JustEat == "") {
+			filters.JustEat = true;
+		} else if (req.query.JustEat == false) {
+			filters.Deliveroo = false;
+		}
+		if (req.query.JustEat_order) {
+			filters.JustEat = req.query.JustEat_order;
+		}
+		if (req.query.Deliveroo == "") {
+			filters.Deliveroo = true;
+		} else if (req.query.Deliveroo == false) {
+			filters.Deliveroo = false;
+		}
+		if (req.query.Deliveroo_order) {
+			filters.Deliveroo_order = req.query.Deliveroo_order;
+		}
+
+		console.error(req.query);
+		console.error(filters);
 
 		const { ordersList, totalOrderList } = await OrdersDAO.getOrders({
 			filters,

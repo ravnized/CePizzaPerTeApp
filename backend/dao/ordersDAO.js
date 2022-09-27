@@ -35,11 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = __importDefault(require("mongoose"));
 var orders;
 var OrdersDAO = /** @class */ (function () {
     function OrdersDAO() {
@@ -72,69 +68,76 @@ var OrdersDAO = /** @class */ (function () {
     OrdersDAO.getOrders = function (_a) {
         var _b = _a === void 0 ? {} : _a, _c = _b.filters, filters = _c === void 0 ? {} : _c, _d = _b.page, page = _d === void 0 ? 0 : _d, _e = _b.ordersPerPage, ordersPerPage = _e === void 0 ? 10 : _e;
         return __awaiter(this, void 0, void 0, function () {
-            var query, cursor, e_2, displayCursor, ordersList, totalOrderList, e_3, e_4;
+            var _id, client_id, cost, JustEat, JustEat_order, Deliveroo, Deliveroo_order, query, querySingle, cursor, e_2, displayCursor, ordersList, totalOrderList, e_3, e_4;
             return __generator(this, function (_f) {
                 switch (_f.label) {
                     case 0:
-                        _f.trys.push([0, 10, , 11]);
-                        query = {};
-                        if ("date" in filters) {
-                            query = { date: { $eq: filters["date"] } };
-                        }
-                        else if ("cost" in filters) {
-                            query = { adress: { $eq: filters["cost"] } };
-                        }
-                        else if ("JustEat" in filters) {
-                            query = { JustEat: { $eq: filters["JustEat"] } };
-                        }
-                        else if ("Deliveroo" in filters) {
-                            query = { Deliveroo: { $eq: filters["Deliveroo"] } };
-                        }
-                        cursor = void 0;
+                        _id = "", client_id = "", cost = 0, JustEat = false, JustEat_order = "", Deliveroo = false, Deliveroo_order = "";
                         _f.label = 1;
                     case 1:
-                        _f.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, orders.find(query)];
+                        _f.trys.push([1, 11, , 12]);
+                        query = {
+                            _id: _id,
+                            client_id: client_id,
+                            cost: cost,
+                            JustEat: JustEat,
+                            JustEat_order: JustEat_order,
+                            Deliveroo: Deliveroo,
+                            Deliveroo_order: Deliveroo_order,
+                        };
+                        for (querySingle in query) {
+                            query[querySingle] = { $eq: filters[querySingle] };
+                            if (filters[querySingle] == undefined) {
+                                delete query[querySingle];
+                            }
+                        }
+                        console.error(query);
+                        cursor = void 0;
+                        _f.label = 2;
                     case 2:
-                        cursor = _f.sent();
-                        return [3 /*break*/, 4];
+                        _f.trys.push([2, 4, , 5]);
+                        return [4 /*yield*/, orders.find(query)];
                     case 3:
+                        cursor = _f.sent();
+                        return [3 /*break*/, 5];
+                    case 4:
                         e_2 = _f.sent();
                         console.error("Unable to issue find command, ".concat(e_2));
                         return [2 /*return*/, { ordersList: 0, totalOrderList: 0 }];
-                    case 4:
+                    case 5:
                         displayCursor = cursor
                             .limit(ordersPerPage)
                             .skip(ordersPerPage * page);
-                        _f.label = 5;
-                    case 5:
-                        _f.trys.push([5, 8, , 9]);
-                        return [4 /*yield*/, displayCursor.toArray()];
+                        _f.label = 6;
                     case 6:
+                        _f.trys.push([6, 9, , 10]);
+                        return [4 /*yield*/, displayCursor.toArray()];
+                    case 7:
                         ordersList = _f.sent();
                         return [4 /*yield*/, orders.countDocuments(query)];
-                    case 7:
+                    case 8:
                         totalOrderList = _f.sent();
                         return [2 /*return*/, { ordersList: ordersList, totalOrderList: totalOrderList }];
-                    case 8:
+                    case 9:
                         e_3 = _f.sent();
                         console.log("Unable to convert cursor to array or problem counting documents, ".concat(e_3));
                         return [2 /*return*/, { ordersList: [], totalOrderList: 0 }];
-                    case 9: return [3 /*break*/, 11];
-                    case 10:
+                    case 10: return [3 /*break*/, 12];
+                    case 11:
                         e_4 = _f.sent();
                         console.log("unable to get clients ".concat(e_4));
-                        return [3 /*break*/, 11];
-                    case 11: return [2 /*return*/];
+                        return [3 /*break*/, 12];
+                    case 12: return [2 /*return*/];
                 }
             });
         });
     };
     OrdersDAO.insertOrder = function (_a) {
-        var _b = _a === void 0 ? {} : _a, _c = _b.clientId, clientId = _c === void 0 ? new mongoose_1.default.Types.ObjectId() : _c, _d = _b.date, date = _d === void 0 ? new Date() : _d, _e = _b.cost, cost = _e === void 0 ? 0 : _e, _f = _b.JustEat, JustEat = _f === void 0 ? false : _f, _g = _b.JustEat_order, JustEat_order = _g === void 0 ? "" : _g, _h = _b.Deliveroo, Deliveroo = _h === void 0 ? false : _h, _j = _b.Deliveroo_order, Deliveroo_order = _j === void 0 ? "" : _j, _k = _b.pizze_ordinate, pizze_ordinate = _k === void 0 ? [] : _k;
+        var _b = _a === void 0 ? {} : _a, _c = _b.clientId, clientId = _c === void 0 ? "" : _c, _d = _b.date, date = _d === void 0 ? new Date() : _d, _e = _b.cost, cost = _e === void 0 ? 0 : _e, _f = _b.JustEat, JustEat = _f === void 0 ? false : _f, _g = _b.JustEat_order, JustEat_order = _g === void 0 ? "" : _g, _h = _b.Deliveroo, Deliveroo = _h === void 0 ? false : _h, _j = _b.Deliveroo_order, Deliveroo_order = _j === void 0 ? "" : _j, _k = _b.pizze_ordinate, pizze_ordinate = _k === void 0 ? [] : _k;
         return __awaiter(this, void 0, void 0, function () {
             var order, cursor;
             return __generator(this, function (_l) {
+                console.error(clientId);
                 order = {
                     clientId: clientId,
                     date: date,

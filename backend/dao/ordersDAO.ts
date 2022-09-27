@@ -27,17 +27,31 @@ export default class OrdersDAO {
 		page = 0,
 		ordersPerPage = 10,
 	} = {}): Promise<any> {
+		let _id = "",
+			client_id = "",
+			cost = 0,
+			JustEat = false,
+			JustEat_order = "",
+			Deliveroo = false,
+			Deliveroo_order = "";
+
 		try {
-			let query: any = {};
-			if ("date" in filters) {
-				query = { date: { $eq: filters["date"] } };
-			} else if ("cost" in filters) {
-				query = { adress: { $eq: filters["cost"] } };
-			} else if ("JustEat" in filters) {
-				query = { JustEat: { $eq: filters["JustEat"] } };
-			} else if ("Deliveroo" in filters) {
-				query = { Deliveroo: { $eq: filters["Deliveroo"] } };
+			let query: any = {
+				_id,
+				client_id,
+				cost,
+				JustEat,
+				JustEat_order,
+				Deliveroo,
+				Deliveroo_order,
+			};
+			for (let querySingle in query) {
+				query[querySingle] = { $eq: filters[querySingle] };
+				if (filters[querySingle] == undefined) {
+					delete query[querySingle];
+				}
 			}
+			console.error(query);
 
 			let cursor: any;
 			try {
@@ -51,6 +65,7 @@ export default class OrdersDAO {
 				.skip(ordersPerPage * page);
 			try {
 				const ordersList = await displayCursor.toArray();
+
 				const totalOrderList = await orders.countDocuments(query);
 				return { ordersList, totalOrderList };
 			} catch (e) {
@@ -65,7 +80,7 @@ export default class OrdersDAO {
 	}
 
 	static async insertOrder({
-		clientId = new mongoose.Types.ObjectId(),
+		clientId = "",
 		date = new Date(),
 		cost = 0,
 		JustEat = false,
@@ -76,6 +91,8 @@ export default class OrdersDAO {
 	} = {}): Promise<any> {
 		let order: any;
 		let cursor: any;
+
+		console.error(clientId);
 
 		order = {
 			clientId,

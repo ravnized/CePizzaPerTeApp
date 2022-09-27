@@ -1,0 +1,21 @@
+.colomnTop {
+	margin-top: 3rem;
+}
+.cardPrincipale {
+	position: absolute;
+	opacity: 0;
+}
+.blackBackground {
+	top: 0;
+	left: 0;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	opacity: 0;
+}
+
+.cardElement {
+	transform: translateY(200px);
+	opacity: 0;
+}

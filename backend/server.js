@@ -67,9 +67,13 @@ var express_1 = __importDefault(require("express"));
 var mongodb_1 = require("mongodb");
 var clients_routes_1 = __importDefault(require("./api/clients-routes"));
 var orders_routes_1 = __importDefault(require("./api/orders-routes"));
+var users_routes_1 = __importDefault(require("./api/users-routes"));
 var cors_1 = __importDefault(require("cors"));
 var clientsDAO_1 = __importDefault(require("./dao/clientsDAO"));
 var ordersDAO_1 = __importDefault(require("./dao/ordersDAO"));
+var userDAO_1 = __importDefault(require("./dao/userDAO"));
+var body_parser_1 = __importDefault(require("body-parser"));
+var cookie_parser_1 = __importDefault(require("cookie-parser"));
 dotenv.config({ path: __dirname + "/../.env" });
 var mongoClient = mongodb_1.MongoClient;
 var app = (0, express_1.default)();
@@ -87,15 +91,20 @@ mongoClient
                 return [4 /*yield*/, ordersDAO_1.default.injectDB(connection)];
             case 2:
                 _a.sent();
-                app.listen(5000, function () { return console.log("Server started on port 5000"); });
+                return [4 /*yield*/, userDAO_1.default.injectDB(connection)];
+            case 3:
+                _a.sent();
+                app.listen(5001, function () { return console.log("Server started on port 5001"); });
                 return [2 /*return*/];
         }
     });
 }); });
 app.use((0, cors_1.default)());
-app.use(express_1.default.json());
+app.use(body_parser_1.default.json());
+app.use((0, cookie_parser_1.default)());
 app.use("/api/v1/clients", clients_routes_1.default);
 app.use("/api/v1/orders", orders_routes_1.default);
+app.use("/api/v1/users", users_routes_1.default);
 app.use("*", function (req, res) {
     res.status(404).json({ error: "not found" });
 });

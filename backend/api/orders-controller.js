@@ -72,18 +72,38 @@ var OrdersController = /** @class */ (function () {
                             : 20;
                         page = req.query.page ? parseInt(req.query.page, 10) : 0;
                         filters = {};
+                        if (req.query.id) {
+                            filters._id = new mongoose_1.default.Types.ObjectId(req.query.id);
+                        }
+                        if (req.query.client_id) {
+                            filters.client_id = new mongoose_1.default.Types.ObjectId(req.query.client_id);
+                        }
                         if (req.query.date) {
-                            filters.date = req.query.date;
+                            filters.date = new Date(req.query.date);
                         }
-                        else if (req.query.cost) {
-                            filters.cost = req.query.cost;
+                        if (req.query.cost) {
+                            filters.cost = parseFloat(req.query.cost);
                         }
-                        else if (req.query.JustEat) {
-                            filters.JustEat = req.query.JustEat;
+                        if (req.query.JustEat == "") {
+                            filters.JustEat = true;
                         }
-                        else if (req.query.Deliveroo) {
-                            filters.Deliveroo = req.query.Deliveroo;
+                        else if (req.query.JustEat == false) {
+                            filters.Deliveroo = false;
                         }
+                        if (req.query.JustEat_order) {
+                            filters.JustEat = req.query.JustEat_order;
+                        }
+                        if (req.query.Deliveroo == "") {
+                            filters.Deliveroo = true;
+                        }
+                        else if (req.query.Deliveroo == false) {
+                            filters.Deliveroo = false;
+                        }
+                        if (req.query.Deliveroo_order) {
+                            filters.Deliveroo_order = req.query.Deliveroo_order;
+                        }
+                        console.error(req.query);
+                        console.error(filters);
                         return [4 /*yield*/, ordersDAO_1.default.getOrders({
                                 filters: filters,
                                 page: page,
