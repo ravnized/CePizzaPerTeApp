@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Routes, Route, Link, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Routes, Route, Link } from "react-router-dom";
 import "./App.css";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
@@ -9,6 +9,7 @@ import Login from "./components/login";
 import Order from "./components/order";
 import Logout from "./components/logout";
 import ProtectedRoute from "./components/protectedRoute";
+import Homepage from "./components/homepage";
 
 function App() {
 	let [email, setEmail] = useState("");
@@ -26,8 +27,8 @@ function App() {
 		setLastName(loginData.lastName);
 	};
 
-	let getProtectedRouteVerify = (protectedRouteVerify: any) => {
-		setProtectedRouteVerify(protectedRouteVerify);
+	let getProtectedRouteVerify = (protectedResponse: any) => {
+		setProtectedRouteVerify(protectedResponse);
 	};
 
 	const toggleOffCanvas = () => {
@@ -58,7 +59,7 @@ function App() {
 		console.log("name: " + name);
 		console.log("lastName: " + lastName);
 		console.log("protectedRouteVerify: " + protectedRouteVerify);
-	}, [email, isAutenticated, lastName, name, password]);
+	}, [email, isAutenticated, lastName, name, password, protectedRouteVerify]);
 
 	return (
 		<div className="App">
@@ -79,7 +80,12 @@ function App() {
 						onHide={toggleOffCanvas}
 					>
 						{isAutenticated ? (
-							<Link to="/preLogout" onClick={toggleOffCanvas}>
+							<Link
+								to="/preLogout"
+								onClick={() => {
+									toggleOffCanvas();
+								}}
+							>
 								<Button variant="outline-primary">logout</Button>
 							</Link>
 						) : (
@@ -93,8 +99,10 @@ function App() {
 			<div className="Main">
 				<div className="container">
 					<Routes>
-						<Route path="/" element={<Orders />}></Route>
-						<Route path="/order" element={<Order />}></Route>
+						<Route
+							path="/order"
+							element={<Order isAutenticated={isAutenticated} />}
+						></Route>
 						<Route
 							path="/login"
 							element={<Login autentication={getLogin} />}
@@ -104,8 +112,8 @@ function App() {
 							element={
 								<ProtectedRoute
 									path={"/logout"}
-									isAutenticated={isAutenticated}
-									protectedRouteVerify={getProtectedRouteVerify}
+									protectedResponse={getProtectedRouteVerify}
+									option={isAutenticated}
 								/>
 							}
 						></Route>
@@ -114,11 +122,18 @@ function App() {
 							element={
 								<Logout
 									autentication={getLogin}
-									isAutenticated={isAutenticated}
-									protectedRouteVerify={getProtectedRouteVerify}
+									protectedResponse={protectedRouteVerify}
 								/>
 							}
 						></Route>
+						{isAutenticated ? (
+							<Route
+								path="/"
+								element={<Orders isAutenticated={isAutenticated} />}
+							></Route>
+						) : (
+							<Route path="/" element={<Homepage />} />
+						)}
 					</Routes>
 				</div>
 			</div>

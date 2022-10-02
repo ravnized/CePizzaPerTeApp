@@ -2,14 +2,19 @@ import React, { useLayoutEffect, useRef, useState } from "react";
 import OrdersDataService from "../services/ordersService";
 import gsap from "gsap";
 import { CSSPlugin } from "gsap/CSSPlugin";
-import { Navigate, useLocation } from "react-router";
+import { useLocation } from "react-router";
 import { Card } from "react-bootstrap";
 import "./main.css";
 import "./css/order.css";
 import { createBrowserHistory } from "history";
+import { useNavigate } from "react-router-dom";
 let history = createBrowserHistory();
 gsap.registerPlugin(CSSPlugin);
-const Order = (props: any) => {
+const Order = ({ isAutenticated }: any) => {
+	let navigate = useNavigate();
+	if (!isAutenticated) {
+		navigate("/");
+	}
 	let orderIntialState = {
 		_id: "",
 		client_id: null,
@@ -24,8 +29,6 @@ const Order = (props: any) => {
 	};
 
 	let [order, setOrder] = useState(orderIntialState);
-	let tl = gsap.timeline();
-	let tl2 = gsap.timeline();
 	let data: any;
 	let location = useRef("");
 	data = useLocation();
@@ -39,8 +42,6 @@ const Order = (props: any) => {
 			});
 	}
 
-
-
 	useLayoutEffect(() => {
 		if (data.state != null) {
 			setOrder(data.state.order);
@@ -51,7 +52,7 @@ const Order = (props: any) => {
 		}
 
 		//getAll();
-	}, []);
+	}, [data.state, order._id]);
 	/*
 	if (order._id === undefined) {
 		return <Navigate to="/" />;
@@ -64,7 +65,7 @@ const Order = (props: any) => {
 					<Card.Title>Order n: {order._id}</Card.Title>
 					<Card.Text>
 						Nome Cliente:
-						{order.client_id != undefined
+						{order.client_id !== undefined
 							? `${order.client_id}`
 							: "non registrato"}{" "}
 						<br />

@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import OrdersDataService from "../services/ordersService";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import gsap from "gsap";
@@ -10,10 +9,15 @@ import { CSSPlugin } from "gsap/CSSPlugin";
 
 import pizzaImage from "../assets/images/pizza.jpeg";
 import "./main.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 gsap.registerPlugin(CSSPlugin);
 
-const Orders = (props: any) => {
+const Orders = ({ isAutenticated }: any) => {
+	let navigate = useNavigate();
+	if (!isAutenticated) {
+		navigate("/");
+	}
+
 	let [orders, setOrders] = useState([]);
 
 	let [tl3] = useState(gsap.timeline());

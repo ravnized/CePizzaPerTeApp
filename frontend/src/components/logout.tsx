@@ -3,13 +3,9 @@ import { Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import UserDataService from "../services/usersService";
 
-const Logout = ({ autentication }: any, { protectedRouteVerify }: any) => {
-	let [isAutenticated, setIsAutenticated] = useState(false);
+const Logout = ({ autentication, protectedResponse }: any) => {
 	let [logoutResponse, setLogoutResponse] = useState(false);
 	let navigate = useNavigate();
-	function parseString(value: string) {
-		return localStorage.getItem(value) === "true";
-	}
 
 	function logoutReq(): Promise<boolean> {
 		UserDataService.logout()
@@ -33,23 +29,22 @@ const Logout = ({ autentication }: any, { protectedRouteVerify }: any) => {
 	}
 
 	useEffect(() => {
-		console.log(protectedRouteVerify);
-		if (!protectedRouteVerify) {
+		if (!protectedResponse) {
 			navigate("/");
+		} else {
+			if (logoutResponse) {
+				let loginData = {
+					email: " ",
+					password: " ",
+					isAutenticated: false,
+					name: " ",
+					lastName: " ",
+				};
+				autentication(loginData);
+				console.log("logout");
+			}
 		}
-
-		if (logoutResponse) {
-			let loginData = {
-				email: " ",
-				password: " ",
-				isAutenticated: false,
-				name: " ",
-				lastName: " ",
-			};
-			autentication(loginData);
-			console.log("logout");
-		}
-	}, [autentication, logoutResponse, navigate, protectedRouteVerify]);
+	}, [autentication, logoutResponse, navigate, protectedResponse]);
 
 	return (
 		<div className="CenterDiv">

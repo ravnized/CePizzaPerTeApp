@@ -1,29 +1,21 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Logout from "./logout";
 
-const ProtectedRoute = (
-	path: any,
-	isAutenticated: boolean,
-	{ protectedRouteVerify }: any,
-) => {
+const ProtectedRoute = ({ protectedResponse, option, path }: any) => {
 	let navigate = useNavigate();
-	
 	useEffect(() => {
-		console.log(protectedRouteVerify);
-
-		if (isAutenticated) {
-			
-			protectedRouteVerify();
+		if (option) {
+			protectedResponse(true);
 			navigate(path);
 		} else {
+			console.log("bad login");
 			navigate("/");
 		}
-	}, [isAutenticated, navigate, path, protectedRouteVerify]);
+	}, [navigate, option, path, protectedResponse]);
 
 	return (
 		<div>
-			<h1>Protected Route</h1>
+			<h1>Protected Route </h1>
 		</div>
 	);
 };
